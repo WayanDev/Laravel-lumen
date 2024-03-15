@@ -15,6 +15,7 @@ class BooksControllerTest extends TestCase
     }
 
     /** @test **/
+    
     public function index_should_return_a_collection_of_records()
     {
         $this
