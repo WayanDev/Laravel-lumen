@@ -12,7 +12,6 @@ class BooksController
      * GET /books
      * @return array
      */
-    
     public function index()
     {
         return [
@@ -20,4 +19,5 @@ class BooksController
             ['title' => 'A Wrinkle in Time']
         ];
     }
+
 }
