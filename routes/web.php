@@ -17,4 +17,6 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 $router->get('/books', 'BooksController@index');
+$router->get('/books/{id:[\d]+}', 'BooksController@show');
+
 
