@@ -51,12 +51,11 @@ class BooksControllerTest extends TestCase
     public function show_should_fail_when_the_book_id_does_not_exist()
     {
         $this
-            ->get('/books/99999')
+            ->get('/books/99999', ['Accept' => 'application/json'])
             ->seeStatusCode(404)
             ->seeJson([
-                'error' => [
-                    'message' => 'Book not found'
-                ]
+                'message' => 'Not Found',
+                'status' => 404
             ]);
     }
     /** @test **/
@@ -82,7 +81,7 @@ class BooksControllerTest extends TestCase
             ->seeInDatabase('books', ['title' => 'The Invisible Man']);
     }
 
-     /** @test */
+    /** @test */
     public function store_should_respond_with_a_201_and_location_header_when_successful()
     {
         $this->post('/books', [
@@ -137,7 +136,7 @@ class BooksControllerTest extends TestCase
     public function update_should_not_match_an_invalid_route()
     {
         $this->put('/books/this-is-invalid')
-        ->seeStatusCode(404);
+            ->seeStatusCode(404);
     }
 
     /** @test **/
@@ -166,7 +165,6 @@ class BooksControllerTest extends TestCase
     public function destroy_should_not_match_an_invalid_route()
     {
         $this->delete('/books/this-is-invalid')
-        ->seeStatusCode(404);
+            ->seeStatusCode(404);
     }
-
 }
