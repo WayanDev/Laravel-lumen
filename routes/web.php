@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PeminjamanController;
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -13,15 +16,19 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-$router->get('/books', 'BooksController@index');
-$router->get('/books/{id:[\d]+}', [
+Route::get('/books', 'BooksController@index');
+Route::get('/books/{id:[\d]+}', [
     'as' => 'books.show',
     'uses' => 'BooksController@show'
 ]);
-$router->post('/books', 'BooksController@store');
-$router->put('/books/{id:[\d]+}', 'BooksController@update');
-$router->delete('/books/{id:[\d]+}', 'BooksController@destroy');
+Route::post('/books', 'BooksController@store');
+Route::put('/books/{id:[\d]+}', 'BooksController@update');
+Route::delete('/books/{id:[\d]+}', 'BooksController@destroy');
 
+Route::group(['prefix' => 'api'], function () {
+    Route::get('/peminjaman', 'PeminjamanController@index');
+    Route::get('/peminjaman/{id}', 'PeminjamanController@show');
+    Route::post('/peminjaman', 'PeminjamanController@store');
+    Route::put('/peminjaman/{id}', 'PeminjamanController@update');
+    Route::delete('/peminjaman/{id}', 'PeminjamanController@destroy');
+});

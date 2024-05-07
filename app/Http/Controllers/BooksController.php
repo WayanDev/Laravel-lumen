@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use App\Transformer\BookTransformer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Class BooksController
  * @package App\Http\Controllers
  */
-class BooksController
+class BooksController extends Controller
 {
     /**
      * GET /books
@@ -18,7 +19,7 @@ class BooksController
      */
     public function index()
     {
-        return Book::all();
+        return $this->collection(Book::all(), new BookTransformer());
     }
     /**
      * GET /books/{id}
@@ -27,25 +28,28 @@ class BooksController
      */
     public function show($id)
     {
-        try {
-            return Book::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'error' => [
-                    'message' => 'Book not found'
-                ]
-            ], 404);
-        }
+        return $this->item(Book::findOrFail($id), new BookTransformer());
     }
     /**
      * POST /books
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'author' => 'required'
+        ],[
+            'description.required' => 'Please provide a :attribute.'
+        ]);
+
         $book = Book::create($request->all());
-        return response()->json(['created' => true], 201, [
+        $data = $this->item($book, new BookTransformer());
+
+        return response()->json($data, 201, [
             'Location' => route('books.show', ['id' => $book->id])
         ]);
     }
@@ -68,9 +72,18 @@ class BooksController
                 ]
             ], 404);
         }
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'author' => 'required'
+        ],[
+            'description.required' => 'Please provide a :attribute.'
+            
+        ]);
+
         $book->fill($request->all());
         $book->save();
-        return $book;
+        return $this->item($book, new BookTransformer());
     }
 
     /**
