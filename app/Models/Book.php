@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Author;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
@@ -11,5 +12,10 @@ class Book extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'description', 'author'];
+    protected $fillable = ['title', 'description', 'author_id'];
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
 }

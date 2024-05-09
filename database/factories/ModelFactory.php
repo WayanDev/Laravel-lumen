@@ -16,7 +16,6 @@ class ModelFactory extends Factory
         return [
             'title' => substr($title, 0, strlen($title) - 1),
             'description' => $this->faker->text,
-            'author' => $this->faker->name
         ];
     }
 }
