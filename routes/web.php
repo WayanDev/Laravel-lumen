@@ -25,6 +25,18 @@ Route::post('/books', 'BooksController@store');
 Route::put('/books/{id:[\d]+}', 'BooksController@update');
 Route::delete('/books/{id:[\d]+}', 'BooksController@destroy');
 
+Route::group(['prefix' => 'authors'],function() {
+    Route::get('/', 'AuthorsController@index');
+    Route::get('/{id:[\d]+}', [
+        'as' => 'authors.show',
+        'uses' => 'AuthorsController@show'
+    ]);
+    Route::post('/', 'AuthorsController@store');
+    Route::put('/{id:[\d]+}', 'AuthorsController@update');
+    Route::delete('/{id:[\d]+}', 'AuthorsController@destroy');
+});
+
+
 Route::group(['prefix' => 'api'], function () {
     Route::get('/peminjaman', 'PeminjamanController@index');
     Route::get('/peminjaman/{id}', 'PeminjamanController@show');
